@@ -15,25 +15,70 @@ let questions_count = 0
 function startGame() {
     startWrapper.classList.add('hide')
     quizWrapper.classList.remove('hide')
-    if (questions_count < 50) {
-        for (let i = 0; i < answers.length; i += 1) {
-            answers[i].innerHTML = Math.floor(Math.random() * 200)
-            answers[i].addEventListener('click', next_question)
-            answers[i].addEventListener('click', check_answer(answers[i]))
-            questions_count += 1
+
+    for (let i = 0; i < answers.length; i += 1) {
+        answers[i].innerHTML = Math.floor(Math.random() * 200)
+        answers[i].addEventListener('click', next_question(answers[i]))
+        questions_count += 1
+    }
+    randomQuestion()
+}
+
+function next_question(item) {
+    return function () {
+        if (item.innerHTML == question_answer) {
+            right_answers += 1
+        } else {
+            wrong_answers += 1
         }
+        console.log(right_answers);
+        console.log(wrong_answers);
+        console.log("______")
+        console.log(question_answer);
+        console.log(item.innerHTML)
+        console.log(questions_count)
         randomQuestion()
     }
 }
 
-function next_question() {
-    if (questions_count < 50) {
+function check_answer(item) {
+    return function () {
+        console.log("right", right_answers);
+        console.log("wring", wrong_answers);
+        console.log(item.innerHTML);
+
+    }
+}
+
+let sign
+function randomQuestion() {
+    if (questions_count < 10) {
         for (let i = 0; i < answers.length; i += 1) {
             answers[i].innerHTML = Math.floor(Math.random() * 200)
-            answers[i].addEventListener('click', check_answer(answers[i]))
-            questions_count += 1
         }
-        randomQuestion()
+        if (Math.floor(Math.random() * 2) === 0) {
+            sign = '-'
+        } else {
+            sign = '+'
+        }
+
+        num1 = Math.floor(Math.random() * 99)
+        num2 = Math.floor(Math.random() * 99)
+        while (num2 > num1 && sign === '-') {
+            num1 = Math.floor(Math.random() * 99)
+            num2 = Math.floor(Math.random() * 99)
+        }
+        let question = num1 + sign + num2
+
+
+        if (sign == '+') {
+            question_answer = num1 + num2
+        } else {
+            question_answer = num1 - num2
+        }
+
+        question_text.innerHTML = question
+        answers[Math.floor(Math.random() * 5)].innerHTML = question_answer
     } else {
         result_text.innerHTML = 'you answer 10 questions, right: ' + right_answers + ', wrong: ' + wrong_answers
         quizWrapper.classList.add('hide')
@@ -42,43 +87,5 @@ function next_question() {
         questions_count = 0
     }
 }
-
-function check_answer(item) {
-    return function () {
-        console.log(item)
-        if (item.innerHTML == question_answer) {
-            right_answers += 1
-        } else {
-            wrong_answers += 1
-        }
-    }
-}
-
-let sign
-function randomQuestion() {
-    if (Math.floor(Math.random() * 2) === 0) {
-        sign = '-'
-    } else {
-        sign = '+'
-    }
-
-    num1 = Math.floor(Math.random() * 99)
-    num2 = Math.floor(Math.random() * 99)
-    while (num2 > num1 && sign === '-') {
-        num1 = Math.floor(Math.random() * 99)
-        num2 = Math.floor(Math.random() * 99)
-    }
-    let question = num1 + sign + num2
-
-
-    if (sign == '+') {
-        question_answer = num1 + num2
-    } else {
-        question_answer = num1 - num2
-    }
-
-    question_text.innerHTML = question
-    answers[Math.floor(Math.random() * 5)].innerHTML = question_answer
-}
-
+console.log(questions_count)
 startButton.addEventListener('click', startGame)
