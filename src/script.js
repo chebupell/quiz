@@ -11,15 +11,17 @@ let num2
 let right_answers = 0
 let wrong_answers = 0
 let questions_count = 0
+let count = 10
+let loops = 1
 
 function startGame() {
     startWrapper.classList.add('hide')
     quizWrapper.classList.remove('hide')
 
+
     for (let i = 0; i < answers.length; i += 1) {
         answers[i].innerHTML = Math.floor(Math.random() * 200)
         answers[i].addEventListener('click', next_question(answers[i]))
-        questions_count += 1
     }
     randomQuestion()
 }
@@ -27,9 +29,11 @@ function startGame() {
 function next_question(item) {
     return function () {
         if (item.innerHTML == question_answer) {
-            right_answers += 1
+            right_answers += 1 / loops
+            item.style.backgroundColor = 'green'
         } else {
-            wrong_answers += 1
+            wrong_answers += 1 / loops
+            item.style.backgroundColor = 'red'
         }
         console.log(right_answers);
         console.log(wrong_answers);
@@ -37,7 +41,8 @@ function next_question(item) {
         console.log(question_answer);
         console.log(item.innerHTML)
         console.log(questions_count)
-        randomQuestion()
+
+        setTimeout(randomQuestion, 1)
     }
 }
 
@@ -46,15 +51,15 @@ function check_answer(item) {
         console.log("right", right_answers);
         console.log("wring", wrong_answers);
         console.log(item.innerHTML);
-
     }
 }
 
 let sign
 function randomQuestion() {
-    if (questions_count < 10) {
+    if (questions_count < count) {
         for (let i = 0; i < answers.length; i += 1) {
             answers[i].innerHTML = Math.floor(Math.random() * 200)
+            answers[i].style.backgroundColor = '#b45f06'
         }
         if (Math.floor(Math.random() * 2) === 0) {
             sign = '-'
@@ -79,12 +84,17 @@ function randomQuestion() {
 
         question_text.innerHTML = question
         answers[Math.floor(Math.random() * 5)].innerHTML = question_answer
+        questions_count += 1
     } else {
-        result_text.innerHTML = 'you answer 10 questions, right: ' + right_answers + ', wrong: ' + wrong_answers
+        result_text.innerHTML = 'you answer 10 questions, right: ' + Math.floor(right_answers) + ', wrong: ' + Math.floor(wrong_answers)
         quizWrapper.classList.add('hide')
         startWrapper.classList.remove('hide')
         result_text.classList.remove('hide')
         questions_count = 0
+        right_answers = 0
+        wrong_answers = 0
+        count += 10
+        loops += 1
     }
 }
 console.log(questions_count)
